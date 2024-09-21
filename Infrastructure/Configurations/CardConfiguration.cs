@@ -19,15 +19,17 @@ namespace Infrastructure.Configurations
             builder.HasKey(u => u.Id);
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
 
-            builder.Property<int?>("PhotoId");
+            builder.Property<int>("PhotoId");
+
+            builder.Property(c => c.PhotoId).IsRequired();
 
             builder.Property(c => c.Status)
-            .HasConversion<string>(); 
+            .HasConversion<int>(); 
 
-            builder.HasOne<Photo>()
-                   .WithMany()
-                   .HasForeignKey("PhotoId")
-                   .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(c => c.Photo)
+                   .WithOne()
+                   .HasForeignKey<Card>(c => c.PhotoId) 
+                   .OnDelete(DeleteBehavior.Cascade); 
 
         }
     }

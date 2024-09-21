@@ -12,8 +12,9 @@ namespace Application.Models
     public class CardModel: BaseModel
     {
         [ForeignKey("Photo")]
-        public int? PhotoId { get; set; }
+        public int PhotoId { get; set; }
         public string Name { get; set; }
         public CardStatus Status { get; set; }
+        public PhotoModel Photo { get; set; }
     }
 }

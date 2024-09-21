@@ -8,9 +8,11 @@ namespace Domain.Enums
 {
     public enum CardStatus
     {
-        Available = 1,    
-        Sold,         
-        NotAvailable, 
-        Reserved      
+        ToDo = 1,
+        InProgress, 
+        Done,
+        Blocked,
+        Archived,
+        Canceled
     }
 }

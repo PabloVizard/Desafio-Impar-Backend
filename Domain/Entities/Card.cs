@@ -11,8 +11,9 @@ namespace Domain.Entities
     public class Card : BaseEntity
     {
         [ForeignKey("Photo")]
-        public int? PhotoId { get; set; }
+        public int PhotoId { get; set; }
         public string Name { get; set; }
         public CardStatus Status { get; set; }
+        public Photo Photo { get; set; }
     }
 }

@@ -1,4 +1,7 @@
+using Application.Validators;
+using FluentValidation.AspNetCore;
 using Infrastructure.Context;
+using Infrastructure.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+InjectorDependencies.Registrer(builder.Services);
+
+builder.Services.AddControllers().AddFluentValidation(fv =>
+{
+    fv.RegisterValidatorsFromAssemblyContaining<PhotoValidator>();
+});
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

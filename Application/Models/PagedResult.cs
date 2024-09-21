@@ -12,6 +12,7 @@ namespace Application.Models
         public int TotalCount { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
+        public int CurrentPageCount => Items.Count;
 
         public PagedResult(List<T> items, int totalCount, int pageNumber, int pageSize)
         {
