@@ -102,6 +102,10 @@ namespace Api.Controllers
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var data = await _baseApp.Add(dados);
                 await _baseApp.SaveChangesAsync();
                 var dataEntity = (EntityEntry<Entity>)data;
