@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    public class CarModel: BaseModel
+    public class CardModel: BaseModel
     {
         [ForeignKey("Photo")]
         public int? PhotoId { get; set; }
