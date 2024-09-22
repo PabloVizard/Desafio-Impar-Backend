@@ -39,6 +39,19 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/swagger");
+    }
+    else
+    {
+        await next();
+    }
+});
+
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
