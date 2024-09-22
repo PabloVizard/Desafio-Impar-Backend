@@ -68,15 +68,16 @@ namespace Application.Application
             return await _baseService.ListAsync();
         }
 
-        public async Task<PagedResult<Model>> ListPagedAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<Model>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize)
         {
-            var items = await _baseService.ListPagedAsync(pageNumber, pageSize);
-            var totalCount = await _baseService.CountAsync();
+            var items = await _baseService.ListPagedAsync(searchTerm, propertyName, pageNumber, pageSize);
+            var totalCount = items.Count;
 
             var mappedItems = _mapper.Map<List<Model>>(items);
 
             return new PagedResult<Model>(mappedItems, totalCount, pageNumber, pageSize);
         }
+
 
 
         public List<Entity> List(Expression<Func<Entity, bool>> predicate)

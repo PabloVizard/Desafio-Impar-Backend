@@ -56,9 +56,59 @@ namespace Infrastructure.Repositories
             return await query.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<List<Entity>> ListPagedAsync(int pageNumber, int pageSize)
+        public async Task<int> CountAsync(string searchTerm, string propertyName)
         {
             IQueryable<Entity> query = _dbSet;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm) && !string.IsNullOrWhiteSpace(propertyName))
+            {
+                var parameter = Expression.Parameter(typeof(Entity), "e");
+                var property = Expression.Property(parameter, propertyName);
+                var searchTermExpression = Expression.Constant(searchTerm);
+
+                if (property.Type == typeof(string))
+                {
+                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                    var containsExpression = Expression.Call(property, containsMethod, searchTermExpression);
+                    var lambda = Expression.Lambda<Func<Entity, bool>>(containsExpression, parameter);
+                    query = query.Where(lambda);
+                }
+                else
+                {
+                    var equalsExpression = Expression.Equal(property, Expression.Convert(searchTermExpression, property.Type));
+                    var lambda = Expression.Lambda<Func<Entity, bool>>(equalsExpression, parameter);
+                    query = query.Where(lambda);
+                }
+            }
+
+            return await query.CountAsync();
+        }
+
+
+        public async Task<List<Entity>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize)
+        {
+            IQueryable<Entity> query = _dbSet;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm) && !string.IsNullOrWhiteSpace(propertyName))
+            {
+                var parameter = Expression.Parameter(typeof(Entity), "e");
+                var property = Expression.Property(parameter, propertyName);
+                var searchTermExpression = Expression.Constant(searchTerm);
+
+                if (property.Type == typeof(string))
+                {
+                    var containsMethod = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                    var containsExpression = Expression.Call(property, containsMethod, searchTermExpression);
+                    var lambda = Expression.Lambda<Func<Entity, bool>>(containsExpression, parameter);
+                    query = query.Where(lambda);
+                }
+                else
+                {
+                    var equalsExpression = Expression.Equal(property, Expression.Convert(searchTermExpression, property.Type));
+                    var lambda = Expression.Lambda<Func<Entity, bool>>(equalsExpression, parameter);
+                    query = query.Where(lambda);
+                }
+            }
 
             var exampleEntity = await _dbSet.FirstOrDefaultAsync();
 
@@ -71,12 +121,12 @@ namespace Infrastructure.Repositories
                     query = query.Include(navigation.Metadata.Name);
                 }
             }
+
             return await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
         }
-
 
 
         public Entity FindBy(Expression<Func<Entity, bool>> predicate)

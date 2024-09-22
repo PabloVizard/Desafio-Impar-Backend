@@ -40,12 +40,11 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("ObterTodosPaginados")]
-        public virtual async Task<IActionResult> ObterTodosPaginados(int pageNumber = 1, int pageSize = 10)
+        public virtual async Task<IActionResult> ObterTodosPaginados(string? searchTerm = null, string? propertyName = null, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var retorno = await _baseApp.ListPagedAsync(pageNumber, pageSize);
-
+                var retorno = await _baseApp.ListPagedAsync(searchTerm, propertyName, pageNumber, pageSize);
                 return Ok(retorno);
             }
             catch (Exception er)
@@ -54,12 +53,17 @@ namespace Api.Controllers
             }
         }
 
+
         [HttpPut]
         [Route("Atualizar")]
         public virtual async Task<IActionResult> Atualizar(Model dados)
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var dadosFind = await _baseApp.FindAsync(dados.Id);
                 if (dadosFind == null)
                 {

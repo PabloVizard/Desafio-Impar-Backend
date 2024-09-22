@@ -20,7 +20,7 @@ namespace Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("DefaultConnection");
+                optionsBuilder.UseSqlServer("DefaultConnection", b => b.MigrationsAssembly("Api"));
                 base.OnConfiguring(optionsBuilder);
             }
         }

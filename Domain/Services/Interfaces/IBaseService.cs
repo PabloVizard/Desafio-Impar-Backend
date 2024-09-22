@@ -21,8 +21,8 @@ namespace Domain.Services.Interfaces
         Task<List<Entity>> ListAsync();
         List<Entity> List(Expression<Func<Entity, bool>> predicate);
         Task<List<Entity>> ListAsync(Expression<Func<Entity, bool>> predicate);
-        Task<List<Entity>> ListPagedAsync(int pageNumber, int pageSize);
-        Task<int> CountAsync();
+        Task<List<Entity>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize);
+        Task<int> CountAsync(string searchTerm, string propertyName);
         IQueryable<Entity> Query();
         Task<object> Add(Entity entity);
         void AddRange(IEnumerable<Entity> entities);

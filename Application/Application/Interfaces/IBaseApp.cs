@@ -22,7 +22,7 @@ namespace Application.Application.Interfaces
         List<Entity> List();
         Task<List<Entity>> ListAsync();
         List<Entity> List(Expression<Func<Entity, bool>> predicate);
-        Task<PagedResult<Model>> ListPagedAsync(int pageNumber, int pageSize);
+        Task<PagedResult<Model>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize);
         Task<List<Entity>> ListAsync(Expression<Func<Entity, bool>> predicate);
         IQueryable<Entity> Query();
         Task<object> Add(Model model);

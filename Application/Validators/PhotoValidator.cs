@@ -1,6 +1,7 @@
 ﻿using Application.Models;
 using FluentValidation;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,18 +20,8 @@ namespace Application.Validators
 
         private bool BeAValidBase64(string base64String)
         {
-            if (string.IsNullOrEmpty(base64String))
-                return false;
-
-            try
-            {
-                Convert.FromBase64String(base64String);
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
+            Span<byte> buffer = new Span<byte>(new byte[base64String.Length]);
+            return Convert.TryFromBase64String(base64String, buffer, out int bytesParsed);
         }
     }
 }

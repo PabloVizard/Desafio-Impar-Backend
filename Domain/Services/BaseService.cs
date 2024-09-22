@@ -66,10 +66,9 @@ namespace Domain.Services
             return await _repository.ListAsync();
         }
 
-        public async Task<int> CountAsync()
+        public async Task<int> CountAsync(string searchTerm, string propertyName)
         {
-            var items = await _repository.ListAsync();
-            return items.Count;
+            return await _repository.CountAsync(searchTerm, propertyName);
         }
 
         public virtual List<Entity> List(Expression<Func<Entity, bool>> predicate)
@@ -81,9 +80,9 @@ namespace Domain.Services
         {
             return await _repository.ListAsync(predicate);
         }
-        public async Task<List<Entity>> ListPagedAsync(int pageNumber, int pageSize)
+        public async Task<List<Entity>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize)
         {
-            return await _repository.ListPagedAsync(pageNumber, pageSize);
+            return await _repository.ListPagedAsync(searchTerm, propertyName, pageNumber, pageSize);
         }
 
         public virtual IQueryable<Entity> Query()
