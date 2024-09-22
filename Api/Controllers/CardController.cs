@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -14,7 +15,8 @@ namespace Api.Controllers
     {
         private readonly ICardApp _cardApp;
         private readonly IPhotoApp _photoApp;
-        public CardController(ICardApp cardApp, IPhotoApp photoApp) : base(cardApp)
+        private readonly IMapper _mapper;
+        public CardController(ICardApp cardApp, IMapper mapper, IPhotoApp photoApp) : base(cardApp, mapper)
         {
             _cardApp = cardApp;
             _photoApp = photoApp;

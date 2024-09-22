@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Api.Controllers
 {
@@ -15,10 +16,12 @@ namespace Api.Controllers
         where Model : BaseModel
     {
         protected readonly IBaseApp<Entity, Model> _baseApp;
+        private readonly IMapper _mapper;
 
-        public BaseController(IBaseApp<Entity, Model> baseApp)
+        public BaseController(IBaseApp<Entity, Model> baseApp, IMapper mapper)
         {
             _baseApp = baseApp;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -76,7 +79,21 @@ namespace Api.Controllers
                 {
                     if (propertyValueMap.ContainsKey(property.Name))
                     {
-                        property.SetValue(dadosFind, propertyValueMap[property.Name]);
+                        var newValue = propertyValueMap[property.Name];
+                        var currentValue = property.GetValue(dadosFind);
+
+                        if (!Equals(currentValue, newValue))
+                        {
+                            if (newValue != null && !property.PropertyType.IsPrimitive && !property.PropertyType.IsValueType && property.PropertyType != typeof(string))
+                            {
+                                var mappedValue = _mapper.Map(newValue, currentValue, newValue.GetType(), property.PropertyType);
+                                property.SetValue(dadosFind, mappedValue);
+                            }
+                            else
+                            {
+                                property.SetValue(dadosFind, newValue);
+                            }
+                        }
                     }
                 }
 
@@ -95,6 +112,7 @@ namespace Api.Controllers
                 return BadRequest("Erro Inesperado");
             }
         }
+
 
         [HttpPost]
         [Route("Registrar")]
