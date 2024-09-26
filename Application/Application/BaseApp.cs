@@ -71,7 +71,7 @@ namespace Application.Application
         public async Task<PagedResult<Model>> ListPagedAsync(string searchTerm, string propertyName, int pageNumber, int pageSize)
         {
             var items = await _baseService.ListPagedAsync(searchTerm, propertyName, pageNumber, pageSize);
-            var totalCount = items.Count;
+            var totalCount = await _baseService.CountAsync(searchTerm, propertyName);
 
             var mappedItems = _mapper.Map<List<Model>>(items);
 
