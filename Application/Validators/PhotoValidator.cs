@@ -20,6 +20,11 @@ namespace Application.Validators
 
         private bool BeAValidBase64(string base64String)
         {
+            if (base64String.StartsWith("data:image/png;base64,"))
+            {
+                base64String = base64String.Substring("data:image/png;base64,".Length);
+            }
+
             Span<byte> buffer = new Span<byte>(new byte[base64String.Length]);
             return Convert.TryFromBase64String(base64String, buffer, out int bytesParsed);
         }

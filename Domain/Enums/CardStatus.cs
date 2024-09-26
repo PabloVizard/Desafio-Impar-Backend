@@ -11,8 +11,6 @@ namespace Domain.Enums
         ToDo = 1,
         InProgress, 
         Done,
-        Blocked,
-        Archived,
         Canceled
     }
 }
